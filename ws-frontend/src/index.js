@@ -6,10 +6,11 @@ import './index.css';
 import LoginPage from './pages/LoginPage';
 import reportWebVitals from './reportWebVitals';
 import './bootstrap-override.scss'
+import UserSignUpPage from './pages/UserSignUpPage';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <LoginPage />
+    <UserSignUpPage />
   </React.StrictMode>
 );
 

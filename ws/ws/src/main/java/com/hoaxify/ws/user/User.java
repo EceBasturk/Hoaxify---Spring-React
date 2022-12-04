@@ -18,7 +18,7 @@ public class User {
     @GeneratedValue
     private  long id;
 
-    @NotNull
+    @NotNull(message="{hoaxify.constraint.username.NotNull.message}")
     @Size(min = 4, max = 255)
     @UniqueUsername //Kendi anatasyonumuz
     //Unique olması username de aynı değerin birden fazşa bulunamayacağını gösteriyor.
@@ -34,7 +34,7 @@ public class User {
     @Size(min=4)
     //Pattern içinde bulunmasını istediğimiz charları kontrol ediyor. Regex=regular expression
     //Regex içinde dediklerimiz (a dan z ye, A dan Z ye, ve sayılardan bir tane karakter bulundursun
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$" )
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message="{hoaxify.constrain.password.Pattern.message}")
     private String password;
 
 //    public String getUsername() {

@@ -1,37 +1,67 @@
 import React, { Component } from 'react';
 import Input from '../components/input';
 import { login } from '../api/apiCalls'
+import ButtonWithProgress from '../components/ButtonWithProgress';
+import { withApiProgress } from '../shared/ApiProgress';
+
 class LoginPage extends Component {
     state = {
         username: null,
-        password: null
+        password: null,
+        error: null
     }
 
     onChange = event => {
         const { name, value } = event.target;
         this.setState({
-            [name]: value
+            [name]: value,
+            error: null
         })
     }
 
-    onClickLogin = event => {
+    onClickLogin = async event => {
         event.preventDefault();
         const { username, password } = this.state;
         const creds = {
             username,
             password
+        };
+
+        const { push } = this.props.history;
+
+        this.setState({
+            error: null
+        });
+        try {
+            await login(creds);
+            push('/'); //deconstructiondan gelen push. Bir props. Başarılı ise bu route a yönlendiecek.
+        } catch (apiError) {
+            this.setState({
+                error: apiError.response.data.message
+            });
         }
-        login(creds);
-    }
+    };
     render() {
+
+        const { pendingApiCall } = this.props;
+
+        const { username, password, error } = this.state;
+
+        const buttonEnabled = username && password;
         return (
             <div className="container">
                 <form>
                     <h1 className='text-center'>Login</h1>
                     <Input label="Username" name="username" onChange={this.onChange} />
                     <Input label="Password" name="password" onChange={this.onChange} type="password" />
+                    {error && <div className="alert alert-danger">{error}</div>}
                     <div className='text-center'>
-                        <button class="btn btn-primary" onClick={this.onClickLogin}>Login</button>
+                        <ButtonWithProgress
+                            onClick={this.onClickLogin}
+                            disabled={!buttonEnabled || pendingApiCall}
+                            pendingApiCall={pendingApiCall}
+                            text={('Login')}
+                        />
                     </div>
 
                 </form>
@@ -41,4 +71,4 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+export default withApiProgress(LoginPage, '/api/1.0/auth');

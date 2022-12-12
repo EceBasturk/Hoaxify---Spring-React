@@ -9,7 +9,7 @@ import axios from 'axios';
 //WrappedComponent parametresi ile içine bir veri alıyor ve bunu kullanıyor
 export function withApiProgress(WrappedComponent, apiPath) {
     return class extends Component {
-        // static displayName = `ApiProgress(${getDisplayName(WrappedComponent)})`;
+        //static displayName = `ApiProgress(${getDisplayName(WrappedComponent)})`;
 
         state = {
             pendingApiCall: false

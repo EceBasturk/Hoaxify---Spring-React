@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import logo from '../assets/logo3.png';
 import { Link } from 'react-router-dom';
-
+import { connect } from 'react-redux';
+import { logoutSuccess } from '../redux/authActions';
 
 class TopBar extends Component {
 
-    state = {
-        isLoggedIn: true,
-        username: 'user1'
-    };
     render() {
-        const { isLoggedIn, username } = this.state;
+        const { username, isLoggedIn, onLogoutSuccess } = this.props;
+
         let links = (
             <ul className="navbar-nav ms-auto">
                 <li>
-                    <Link className="nav-link" to="/login">
+                    <Link className="nav-link" to="/login" >
                         {('Login')}
                     </Link>
                 </li>
@@ -33,15 +31,18 @@ class TopBar extends Component {
                             {username}
                         </Link>
                     </li>
-                    <li className="nav-link">{('Logout')}</li>
+                    <li className="nav-link" onClick={onLogoutSuccess} style={{ cursor: 'pointer' }}>
+                        {('Logout')}
+                    </li>
                 </ul>
             );
         }
+
         return (
             <div className="shadow-sm bg-light mb-2">
                 <nav className="navbar navbar-light container navbar-expand">
                     <Link className="navbar-brand" to="/">
-                        <img src={logo} width="200" alt="Hoaxify Logo" />
+                        <img src={logo} width="200" alt="Logo" />
 
                     </Link>
                     {links}
@@ -51,4 +52,17 @@ class TopBar extends Component {
     }
 }
 
-export default TopBar;
+const mapStateToProps = store => {
+    return {
+        isLoggedIn: store.isLoggedIn,
+        username: store.username
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onLogoutSuccess: () => dispatch(logoutSuccess())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

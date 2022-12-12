@@ -5,23 +5,28 @@ import UserPage from '../pages/UserPage';
 import { Route, Redirect, Switch, HashRouter as Router } from 'react-router-dom'
 import HomePage from '../pages/HomePage';
 import TopBar from '../components/TopBar';
+// import { Authentication } from '../shared/AuthenticationContext';
 
+class App extends React.Component {
+  // static contextType = Authentication;
+  render() {
+    const isLoggedIn = false;
+    return (
+      <div>
+        <Router>
+          <TopBar />
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            {!isLoggedIn && <Route path="/login" component={LoginPage} />}
+            <Route path="/signup" component={UserSignUpPage} />
+            <Route path="/user/:username" component={UserPage} />
+            <Redirect to="/" />
+          </Switch>
+        </Router>
 
-function App() {
-  return (
-    <div className="row">
-      <Router>
-        <TopBar />
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/signup" component={UserSignUpPage} />
-          <Route path="/user/:username" component={UserPage} />
-          <Redirect to="/" />
-        </Switch>
-      </Router>
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default App;

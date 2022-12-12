@@ -1,9 +1,9 @@
-import { type } from "@testing-library/user-event/dist/type";
 import React from "react";
-import { signup } from '../api/apiCalls'
 import Input from '../components/input'
 import { withApiProgress } from '../shared/ApiProgress';
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { connect } from 'react-redux';
+import { signupHandler } from '../redux/authActions';
 class UserSignUpPage extends React.Component {
 
     state = {
@@ -74,7 +74,8 @@ class UserSignUpPage extends React.Component {
         //     displayname: this.state.displayname,
         //     password: this.state.password
         // };
-
+        const { history, dispatch } = this.props;
+        const { push } = history;
         const { username, displayName, password } = this.state;
         const body = {
             //ilk kısım input name olan usernamei , ikinici kısım state içindeki username i temsil ediyor
@@ -87,7 +88,8 @@ class UserSignUpPage extends React.Component {
 
 
         try {
-            await signup(body);
+            await dispatch(signupHandler(body));
+            push('/');
         } catch (error) {
             if (error.response.data.validationErrors) {
                 this.setState({ errors: error.response.data.validationErrors });
@@ -115,8 +117,8 @@ class UserSignUpPage extends React.Component {
                     <h1 className="text-center">Sign Up </h1>
                     <Input name="username" label="Username" error={username} onChange={this.onChange} />
                     <Input name="displayName" label="Display Name" error={displayName} onChange={this.onChange} />
-                    <Input name="password" label="Password" error={password} onChange={this.onChange} type="password" />
-                    <Input name="passwordRepeat" label="Password Repeat" error={passwordRepeat} onChange={this.onChange} type="password" />
+                    <Input name="password" label="Password" error={password} onChange={this.onChange} type="password" autocomplete="on" />
+                    <Input name="passwordRepeat" label="Password Repeat" error={passwordRepeat} onChange={this.onChange} type="password" autocomplete="on" />
                     <div className="text-center">
                         <ButtonWithProgress
                             onClick={this.onClickSignup}
@@ -131,5 +133,8 @@ class UserSignUpPage extends React.Component {
     }
 }
 
-const UserSignupPageWithApiProgress = withApiProgress(UserSignUpPage, '/api/1.0/users');
-export default UserSignupPageWithApiProgress;
+const forSignUp = withApiProgress(UserSignUpPage, '/api/1.0/users');
+
+
+export default connect()(withApiProgress(forSignUp, '/api/1.0/auth'));
+

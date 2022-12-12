@@ -5,8 +5,8 @@ export const signup = (body) => {
 }
 
 export const login = creds => {
-    {
-        //creds objesi, içinde username ve password olan obje
-        return axios.post('/api/1.0/auth', {}, { auth: creds })
-    }
+
+    //creds objesi, içinde username ve password olan obje
+    return axios.post('/api/1.0/auth', {}, { auth: creds })
+
 }

@@ -3,7 +3,6 @@ import Input from '../components/input';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import { withApiProgress } from '../shared/ApiProgress';
 import { connect } from 'react-redux';
-import { loginSuccess } from '../redux/authActions';
 import { loginHandler } from '../redux/authActions';
 class LoginPage extends Component {
 
@@ -57,7 +56,7 @@ class LoginPage extends Component {
                 <form>
                     <h1 className="text-center">{('Login')}</h1>
                     <Input label={('Username')} name="username" onChange={this.onChange} />
-                    <Input label={('Password')} name="password" type="password" onChange={this.onChange} />
+                    <Input label={('Password')} name="password" type="password" onChange={this.onChange} autocomplete="on" />
                     {error && <div className="alert alert-danger">{error}</div>}
                     <div className="text-center">
                         <ButtonWithProgress

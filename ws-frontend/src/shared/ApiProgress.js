@@ -46,9 +46,8 @@ export function withApiProgress(WrappedComponent, apiPath) {
         };
 
         render() {
-            const { pendingApiCall } = this.state;
-            //props olarak dönen her şeyi alarak olası sıkıntıların önüne geçtik ...props
-            return <WrappedComponent pendingApiCall={pendingApiCall} {...this.props} />;
+            const pendingApiCall = this.state.pendingApiCall || this.props.pendingApiCall;
+            return <WrappedComponent {...this.props} pendingApiCall={pendingApiCall} />;
         }
     };
 }

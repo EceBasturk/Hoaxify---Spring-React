@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class WsApplication {
@@ -15,16 +16,21 @@ public class WsApplication {
 		SpringApplication.run(WsApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner createInitialUsers(UserService userService) {
-		//Lambda Function
-		return (args) -> {
-			User user = new User();
-			user.setUsername("user1");
-			user.setDisplayName("display1");
-			user.setPassword("P4ssword");
-			userService.save(user);
-		};
-	}
+//	@Bean
+//	CommandLineRunner createInitialUsers(UserService userService) {
+//		//Lambda Function
+//		return (args) -> {
+//			for(int i=1; i<=25;i++)
+//			{
+//				User user = new User();
+//				user.setUsername("user" + i);
+//				user.setDisplayName("display" + i);
+//				user.setPassword("P4ssword");
+//				userService.save(user);
+//
+//			}
+//
+//		};
+//	}
 
 }

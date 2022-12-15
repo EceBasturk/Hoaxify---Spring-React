@@ -15,8 +15,8 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 
 
-@Data //It is a quick way of combining features of @ToString, @EqualsAndHashCode, @Getter,  @Setter and @RequiredArgsConstructor.
-@Entity //veritabanı tarafından tanınabilmesi için
+@Data
+@Entity
 @Table(name="users")
 public class User implements UserDetails {
 
@@ -27,26 +27,17 @@ public class User implements UserDetails {
     @NotNull(message="{hoaxify.constraint.username.NotNull.message}")
     @Size(min = 4, max = 255)
     @UniqueUsername //Kendi anatasyonumuz
-    //Unique olması username de aynı değerin birden fazşa bulunamayacağını gösteriyor.
-    //@Column(unique = true)
-    //Column kullanımı yerine kendi constraint anotasyonumuzu yapacağız
-    @JsonView(Views.Base.class)
     private String username;
 
     @NotNull
     @Size(min = 4, max = 255)
-    @JsonView(Views.Base.class)
     private String displayName;
 
     @NotNull
     @Size(min=4)
-    //Pattern içinde bulunmasını istediğimiz charları kontrol ediyor. Regex=regular expression
-    //Regex içinde dediklerimiz (a dan z ye, A dan Z ye, ve sayılardan bir tane karakter bulundursun
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message="{hoaxify.constrain.password.Pattern.message}")
-    @JsonView(Views.Sensitive.class)
     private String password;
 
-    @JsonView(Views.Base.class)
     private String image;
 
     @Override

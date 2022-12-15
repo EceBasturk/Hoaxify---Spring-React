@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Data
-//Null ise bize json içinde dönmeyecek, sadec dolu olanları getirecek
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiError {
     @JsonView(Views.Base.class)

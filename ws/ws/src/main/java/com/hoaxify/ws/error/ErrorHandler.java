@@ -3,7 +3,6 @@ package com.hoaxify.ws.error;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -15,10 +14,8 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestController
 public class ErrorHandler implements ErrorController {
-
     @Autowired
     private ErrorAttributes errorAttributes;
-
     @RequestMapping("/error")
     ApiError handleError(WebRequest webRequest) {
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE, ErrorAttributeOptions.Include.BINDING_ERRORS));

@@ -1,4 +1,5 @@
 package com.hoaxify.ws.user;
+import com.hoaxify.ws.shared.CurrentUser;
 import com.hoaxify.ws.shared.GenericResponse;
 import com.hoaxify.ws.user.vm.UserVM;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    //gelen requestin valid olması gerektiğini @valid ile gösteriyouz
     @PostMapping("/api/1.0/users")
     public GenericResponse createUser(@Valid @RequestBody User user) {
         userService.save(user);
@@ -20,9 +20,8 @@ public class UserController {
     }
 
     @GetMapping("/api/1.0/users")
-    Page<UserVM> getUsers(Pageable page) {
-        return userService.getUsers(page).map(UserVM::new);
-    }
+    Page<UserVM> getUsers(Pageable page, @CurrentUser User user){
+        return userService.getUsers(page, user).map(UserVM::new); }
 
 
 }

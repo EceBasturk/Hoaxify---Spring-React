@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserRepository;
-
 @RestController
 public class AuthController {
 

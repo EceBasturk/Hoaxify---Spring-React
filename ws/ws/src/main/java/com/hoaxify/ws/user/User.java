@@ -1,13 +1,9 @@
 package com.hoaxify.ws.user;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.hoaxify.ws.shared.Views;
 import lombok.Data;
-import lombok.Generated;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

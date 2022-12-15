@@ -4,9 +4,7 @@ import com.hoaxify.ws.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
-
 public class HoaxifyUserDetails implements UserDetails {
     User user;
 

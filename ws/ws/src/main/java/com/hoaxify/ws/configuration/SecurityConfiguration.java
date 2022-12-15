@@ -10,13 +10,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 @EnableWebSecurity
 public class SecurityConfiguration {
-
     @Autowired
     UserAuthService userAuthService;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -39,8 +36,6 @@ public class SecurityConfiguration {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userAuthService).passwordEncoder(passwordEncoder());
     }
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -9,19 +9,28 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/api/1.0")
 public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/api/1.0/users")
+    @PostMapping("/users")
     public GenericResponse createUser(@Valid @RequestBody User user) {
         userService.save(user);
         return new GenericResponse("User created.");
     }
 
-    @GetMapping("/api/1.0/users")
+    @GetMapping("/users")
     Page<UserVM> getUsers(Pageable page, @CurrentUser User user){
-        return userService.getUsers(page, user).map(UserVM::new); }
+        return userService.getUsers(page, user).map(UserVM::new);
+    }
+
+    @GetMapping("/users/{username}")
+    UserVM getUser(@PathVariable String username){
+        User user = userService.getByUsername(username);
+        return new UserVM(user);
+    }
+
 
 
 }

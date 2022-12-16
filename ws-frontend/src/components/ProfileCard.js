@@ -10,7 +10,9 @@ import ButtonWithProgress from './ButtonWithProgress';
 const ProfileCard = props => {
     const { username: loggedInUsername } = useSelector(store => ({ username: store.username }));
     const routeParams = useParams();
+    const pathUsername = routeParams.username;
     const [inEditMode, setInEditMode] = useState(false);
+    const [editable, setEditable] = useState(false);
 
     const [user, setUser] = useState({})
 
@@ -21,7 +23,9 @@ const ProfileCard = props => {
     const { username, displayName, image } = user;
     const [updatedDisplayName, setUpdatedDisplayName] = useState();
 
-
+    useEffect(() => {
+        setEditable(pathUsername === loggedInUsername);
+    }, [pathUsername, loggedInUsername]);
 
     useEffect(() => {
         if (!inEditMode) {
@@ -45,13 +49,10 @@ const ProfileCard = props => {
 
     const pendingApiCall = useApiProgress('put', '/api/1.0/users/' + username);
 
-    const pathUsername = routeParams.username;
     let message = 'We cannot edit';
     if (pathUsername === loggedInUsername) {
         message = 'We can edit';
     }
-
-    const editable = pathUsername === loggedInUsername;
 
     return (
         <div className="card text-center">

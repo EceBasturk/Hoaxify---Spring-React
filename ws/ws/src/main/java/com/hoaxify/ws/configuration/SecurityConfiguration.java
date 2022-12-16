@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -11,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled=true)
+//Bir kullanıcnın bir işlem yaparken buna yetkisi var mı diye kontrol ediyor (PreAuthorize i aktive ediyor)
 public class SecurityConfiguration {
     @Autowired
     UserAuthService userAuthService;
@@ -23,7 +26,7 @@ public class SecurityConfiguration {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/1.0/auth").authenticated()
-                .antMatchers(HttpMethod.GET, "/secured").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/1.0/users/{username}").authenticated()
                 .and()
                 .authorizeRequests().anyRequest().permitAll();
 

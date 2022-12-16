@@ -51,6 +51,8 @@ const ProfileCard = props => {
         message = 'We can edit';
     }
 
+    const editable = pathUsername === loggedInUsername;
+
     return (
         <div className="card text-center">
             <div className="card-header">
@@ -62,10 +64,12 @@ const ProfileCard = props => {
                         <h3>
                             {displayName} @{username}
                         </h3>
-                        <button className='btn btn-success d-inline-flex' onClick={() => setInEditMode(true)}>
-                            <i className="material-icons">edit</i>
-                            {('Edit')}
-                        </button>
+                        {editable && (
+                            <button className="btn btn-success d-inline-flex" onClick={() => setInEditMode(true)}>
+                                <i className="material-icons">edit</i>
+                                {('Edit')}
+                            </button>
+                        )}
                     </>
                 )}
                 {inEditMode && (

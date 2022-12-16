@@ -44,5 +44,5 @@ public class UserService {
         inDB.setDisplayName(updatedUser.getDisplayName());
         return userRepository.save(inDB);
     }
-    
+
 }

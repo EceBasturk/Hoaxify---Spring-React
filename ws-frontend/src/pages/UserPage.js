@@ -2,13 +2,18 @@ import React, { useState, useEffect } from 'react';
 import ProfileCard from '../components/ProfileCard';
 import { getUser } from '../api/apiCalls';
 import { useParams } from 'react-router-dom';
+import { useApiProgress } from '../shared/ApiProgress';
+import Spinner from '../components/Spinner';
 
 const UserPage = () => {
-    const [user, setUser] = useState();
+    //boş bir obje dönerek veritabanı hatalarını engelledik
+    const [user, setUser] = useState({});
     const [notFound, setNotFound] = useState(false);
 
     //useParams == props.matchs.params.username
     const { username } = useParams();
+
+    const pendingApiCall = useApiProgress('/api/1.0/users/' + username);
 
     //user her değiştiğinde useEffect çalışacak
     useEffect(() => {
@@ -24,9 +29,13 @@ const UserPage = () => {
                 setNotFound(true);
             }
         };
-
         loadUser();
-    }, [username]); //username değiştiğinde useEffect çağrılıp güncellenecek
+    }, [username]);//username değiştiğinde useEffect çağrılıp güncellenecek
+
+
+    if (pendingApiCall) {
+        return <Spinner />;
+    }
 
     if (notFound) {
         return (
@@ -37,14 +46,19 @@ const UserPage = () => {
                             error
                         </i>
                     </div>
-                    {('User Not Found')}
+                    <h6>
+                        {('User Not Found')}
+                    </h6>
                 </div>
             </div>
         )
     }
+
+
+
     return (
         <div className="container">
-            <ProfileCard />
+            <ProfileCard user={user} />
         </div>
     );
 };

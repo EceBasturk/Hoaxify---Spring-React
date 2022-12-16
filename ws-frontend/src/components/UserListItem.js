@@ -7,7 +7,7 @@ const UserListItem = props => {
     const { username, displayName, image } = user;
 
     return (
-        <Link to={`/user/${username}`} className="list-group-item list-group-item-action list-group-item-light mb-2">
+        <Link to={`/user/${username}`} className="list-group-item list-group-item-action list-group-item-light mb-2 ">
             <ProfileImageWithDefault className="rounded-circle" width="32" height="32" alt={`${username} profile`} image={image} />
             <span className='p-2'>
                 {username}

@@ -13,7 +13,7 @@ const UserPage = () => {
     //useParams == props.matchs.params.username
     const { username } = useParams();
 
-    const pendingApiCall = useApiProgress('/api/1.0/users/' + username);
+    const pendingApiCall = useApiProgress('get', '/api/1.0/users/' + username);
 
     //user her değiştiğinde useEffect çalışacak
     useEffect(() => {

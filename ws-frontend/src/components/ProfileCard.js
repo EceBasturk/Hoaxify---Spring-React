@@ -14,6 +14,7 @@ const ProfileCard = props => {
     const [inEditMode, setInEditMode] = useState(false);
     const [editable, setEditable] = useState(false);
     const [newImage, setNewImage] = useState();
+    const [validationErrors, setValidationErrors] = useState({});
 
     const [user, setUser] = useState({})
 
@@ -40,13 +41,15 @@ const ProfileCard = props => {
     const onClickSave = async () => {
         const body = {
             displayName: updatedDisplayName,
-            image: newImage.split(',')[1]
+            image: newImage?.split(',')[1]
         };
         try {
             const response = await updateUser(username, body);
             setInEditMode(false);
             setUser(response.data);
-        } catch (error) { }
+        } catch (error) {
+            setValidationErrors(error.response.data.validationErrors);
+        }
 
     };
 
@@ -59,7 +62,24 @@ const ProfileCard = props => {
         fileReader.readAsDataURL(file);
     }
 
+    //setValidationErrors hookunda previousValidationErrors parametresi ile bir fonks yazıldı ve tek satırlık bir fonksiyon olup direkt olarak render edilebileceği için ({}) gibi () içine alınarak yazıldı. return  buna dönüştü ()
+    useEffect(() => {
+        setValidationErrors(previousValidationErrors => ({
+            ...previousValidationErrors,
+            displayName: undefined
+        }))
+    }, [updatedDisplayName])
+
+    useEffect(() => {
+        setValidationErrors(previousValidationErrors => ({
+            ...previousValidationErrors,
+            image: undefined
+        }));
+    }, [newImage]);
+
     const pendingApiCall = useApiProgress('put', '/api/1.0/users/' + username);
+
+    const { displayName: displayNameError, image: imageError } = validationErrors;
 
     let message = 'We cannot edit';
     if (pathUsername === loggedInUsername) {
@@ -100,8 +120,9 @@ const ProfileCard = props => {
                             onChange={event => {
                                 setUpdatedDisplayName(event.target.value);
                             }}
+                            error={displayNameError}
                         />
-                        <input type="file" onChange={onChangeFile} />
+                        <Input type="file" onChange={onChangeFile} error={imageError} />
                         <div>
                             <ButtonWithProgress
                                 className="btn btn-primary d-inline-flex"

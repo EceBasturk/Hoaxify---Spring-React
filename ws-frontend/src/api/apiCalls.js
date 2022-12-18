@@ -28,3 +28,6 @@ export const getUser = username => {
 export const updateUser = (username, body) => {
     return axios.put(`/api/1.0/users/${username}`, body);
 };
+export const postObje = obje => {
+    return axios.post('/api/1.0/objes', obje);
+};

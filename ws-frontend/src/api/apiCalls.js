@@ -31,3 +31,7 @@ export const updateUser = (username, body) => {
 export const postObje = obje => {
     return axios.post('/api/1.0/objes', obje);
 };
+
+export const getObjes = (page = 0) => {
+    return axios.get('/api/1.0/objes?page=' + page);
+}

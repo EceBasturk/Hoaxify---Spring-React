@@ -1,5 +1,6 @@
 package com.hoaxify.ws.obje;
 
+import com.hoaxify.ws.user.User;
 import lombok.Data;
 import lombok.Generated;
 
@@ -18,12 +19,14 @@ public class Obje {
 
     @Size(min=1, max=1000)
     @Column(length = 1000)
-    @NotNull
     //Column değeri db de varchar 255 default değerini 1000 ile değiştirdi.
     private String content;
 
     @Temporal(TemporalType.TIMESTAMP) //döneceği Date tipi seçimi
     private Date timestamp;
+
+    @ManyToOne
+    private User user;
 
     private String tag;
 }

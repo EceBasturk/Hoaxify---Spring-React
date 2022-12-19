@@ -31,4 +31,8 @@ public class ObjeController {
         //ObjeVM in constructorunu çağırarak bir json döndürüyor.
     }
 
+    @GetMapping("/users/{username}/objes")
+    Page<ObjeVM> getUserObjes(@PathVariable String username, @PageableDefault(sort="id", direction= Sort.Direction.DESC) Pageable page){
+        return objeService.getObjesOfUser(username, page).map(ObjeVM::new);
+    }
 }

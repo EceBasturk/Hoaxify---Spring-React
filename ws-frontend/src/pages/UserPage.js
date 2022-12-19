@@ -4,6 +4,7 @@ import { getUser } from '../api/apiCalls';
 import { useParams } from 'react-router-dom';
 import { useApiProgress } from '../shared/ApiProgress';
 import Spinner from '../components/Spinner';
+import ObjeFeed from '../components/ObjeFeed'
 
 const UserPage = () => {
     //boş bir obje dönerek veritabanı hatalarını engelledik
@@ -13,7 +14,7 @@ const UserPage = () => {
     //useParams == props.matchs.params.username
     const { username } = useParams();
 
-    const pendingApiCall = useApiProgress('get', '/api/1.0/users/' + username);
+    const pendingApiCall = useApiProgress('get', '/api/1.0/users/' + username, true);
 
     //user her değiştiğinde useEffect çalışacak
     useEffect(() => {
@@ -33,9 +34,6 @@ const UserPage = () => {
     }, [username]);//username değiştiğinde useEffect çağrılıp güncellenecek
 
 
-    if (pendingApiCall) {
-        return <Spinner />;
-    }
 
     if (notFound) {
         return (
@@ -54,11 +52,21 @@ const UserPage = () => {
         )
     }
 
+    if (pendingApiCall || user.username !== username) {
+        return <Spinner />;
+    }
 
 
     return (
         <div className="container">
-            <ProfileCard user={user} />
+            <div className="row">
+                <div className="col">
+                    <ProfileCard user={user} />
+                </div>
+                <div className="col">
+                    <ObjeFeed />
+                </div>
+            </div>
         </div>
     );
 };

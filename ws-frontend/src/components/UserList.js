@@ -64,7 +64,7 @@ const UserList = () => {
 
   return (
     <div className="card">
-      <h3 className="card-header text-white bg-dark mb-3 text-center">{('Users')}</h3>
+      <h3 className="card-header text-white bg-dark text-center">{('Users')}</h3>
       <div className="list-group-flush">
         {users.map(user => (
           <UserListItem key={user.username} user={user} />

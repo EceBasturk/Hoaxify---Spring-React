@@ -32,6 +32,9 @@ export const postObje = obje => {
     return axios.post('/api/1.0/objes', obje);
 };
 
-export const getObjes = (page = 0) => {
-    return axios.get('/api/1.0/objes?page=' + page);
+export const getObjes = (username, page = 0) => {
+    const path = username ? `/api/1.0/users/${username}/objes?page=` :
+        `/api/1.0/objes?page=`;
+    return axios.get(path + page);
 }
+

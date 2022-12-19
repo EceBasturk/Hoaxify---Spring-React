@@ -46,7 +46,7 @@ const ObjeSubmit = () => {
 
     return (
         <div className='card p-2 flex-row'>
-            <ProfileImageWithDefault imageimage={image} width="32" height="32" className="rounded-circle me-1" />
+            <ProfileImageWithDefault image={image} width="32" height="32" className="rounded-circle me-1" />
             <div className='flex-fill'>
                 <textarea
                     className={textAreaClass}

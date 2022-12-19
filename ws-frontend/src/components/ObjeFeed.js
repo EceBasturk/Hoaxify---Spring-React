@@ -3,19 +3,20 @@ import { getObjes } from '../api/apiCalls'
 import ObjeView from './ObjeView'
 import { useApiProgress } from '../shared/ApiProgress';
 import Spinner from './Spinner';
+import { useParams } from 'react-router-dom';
 
 const ObjeFeed = () => {
     const [objePage, setObjePage] = useState({ content: [], last: true, number: 0 });
-
-    const pendingApiCall = useApiProgress('get', '/api/1.0/objes');
-
+    const { username } = useParams();
+    const path = username ? `/api/1.0/users/${username}/objes?page=` : '/api/1.0/objes?page=';
+    const pendingApiCall = useApiProgress('get', path);
     useEffect(() => {
         loadObjes();
     }, []); // [] mount olduğu anda getiriyor sonra değiştirmiyor.
 
     const loadObjes = async page => {
         try {
-            const response = await getObjes(page);
+            const response = await getObjes(username, page);
             setObjePage(previousObjePage => ({
                 ...response.data,
                 content: [...previousObjePage.content, ...response.data.content]

@@ -26,7 +26,7 @@ const ObjeFeed = () => {
 
     useEffect(() => {
         const getCount = async () => {
-            const response = await getNewObjeCount(firstObjeId);
+            const response = await getNewObjeCount(firstObjeId, username);
             setNewObjeCount(response.data.count);
         };
         let looper = setInterval(() => {
@@ -35,7 +35,7 @@ const ObjeFeed = () => {
         return function cleanup() {
             clearInterval(looper);
         };
-    }, [firstObjeId]);
+    }, [firstObjeId, username]);
 
 
     useEffect(() => {

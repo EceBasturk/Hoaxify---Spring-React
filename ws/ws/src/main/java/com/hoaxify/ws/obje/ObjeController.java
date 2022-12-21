@@ -51,7 +51,14 @@ public class ObjeController {
     }
 
     @GetMapping("/users/{username}/objes/{id:[0-9]+}")
-    Page<ObjeVM> getUserObjesRelative(@PathVariable long id, @PathVariable String username, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page){
-        return objeService.getOldObjesOfUser(id, username, page).map(ObjeVM::new);
+    ResponseEntity<?> getUserObjesRelative(@PathVariable long id, @PathVariable String username, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,@RequestParam(name="count", required = false, defaultValue = "false") boolean count){
+        if(count){
+            long newObjeCount = objeService.getNewObjesCountOfUser(id,username);
+            Map<String,Long> response = new HashMap<>();
+            response.put("count",newObjeCount); //clientta  böyle gözekecek
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.ok(objeService.getOldObjesOfUser(id, username, page).map(ObjeVM::new));
+
     }
 }

@@ -42,6 +42,7 @@ export const getOldObjes = (id, username) => {
     return axios.get(username ? `/api/1.0/users/${username}/objes/${id}` : `/api/1.0/objes/${id}`);
 };
 
-export const getNewObjeCount = id => {
-    return axios.get(`/api/1.0/objes/${id}?count=true`);
+export const getNewObjeCount = (id, username) => {
+    const path = username ? `/api/1.0/users/${username}/objes/${id}?count=true` : `/api/1.0/objes/${id}?count=true`
+    return axios.get(path);
 };

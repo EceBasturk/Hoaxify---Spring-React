@@ -49,4 +49,9 @@ public class ObjeService {
     public long getNewObjesCount(long id) {
         return objeRepository.countByIdGreaterThan(id);
     }
+
+    public long getNewObjesCountOfUser(long id, String username) {
+        User inDB = userService.getByUsername(username);
+        return objeRepository.countByIdGreaterThanAndUser(id,inDB);
+    }
 }

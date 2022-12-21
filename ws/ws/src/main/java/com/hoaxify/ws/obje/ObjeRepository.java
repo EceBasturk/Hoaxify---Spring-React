@@ -12,4 +12,6 @@ public interface ObjeRepository extends JpaRepository<Obje, Long> {
     Page<Obje> findByIdLessThanAndUser(long id, User user, Pageable page);
 
     long countByIdGreaterThan(long id);
+
+    long countByIdGreaterThanAndUser(long id, User user);
 }

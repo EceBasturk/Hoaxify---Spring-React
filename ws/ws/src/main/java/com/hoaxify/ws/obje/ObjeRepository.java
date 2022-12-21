@@ -7,4 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ObjeRepository extends JpaRepository<Obje, Long> {
     Page<Obje> findByUser(User inDB, Pageable page);
+
+    Page<Obje> findByIdLessThan(long id, Pageable page);
+    Page<Obje> findByIdLessThanAndUser(long id, User user, Pageable page);
+
+    long countByIdGreaterThan(long id);
 }

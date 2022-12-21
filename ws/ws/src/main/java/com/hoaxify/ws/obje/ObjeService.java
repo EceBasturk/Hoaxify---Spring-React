@@ -35,4 +35,18 @@ public class ObjeService {
         User inDB = userService.getByUsername(username);
         return objeRepository.findByUser(inDB,page);
     }
+
+    public Page<Obje> getOldObjes(long id, Pageable page) {
+        return objeRepository.findByIdLessThan(id,page);
+    }
+
+
+    public Page<Obje> getOldObjesOfUser(long id, String username, Pageable page) {
+        User inDB = userService.getByUsername(username);
+        return objeRepository.findByIdLessThanAndUser(id, inDB, page);
+    }
+
+    public long getNewObjesCount(long id) {
+        return objeRepository.countByIdGreaterThan(id);
+    }
 }

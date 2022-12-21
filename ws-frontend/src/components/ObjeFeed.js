@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getObjes } from '../api/apiCalls'
+import { getObjes, getOldObjes, getNewObjeCount } from '../api/apiCalls'
 import ObjeView from './ObjeView'
 import { useApiProgress } from '../shared/ApiProgress';
 import Spinner from './Spinner';
@@ -7,40 +7,76 @@ import { useParams } from 'react-router-dom';
 
 const ObjeFeed = () => {
     const [objePage, setObjePage] = useState({ content: [], last: true, number: 0 });
+    const [newObjeCount, setNewObjeCount] = useState(0);
     const { username } = useParams();
     const path = username ? `/api/1.0/users/${username}/objes?page=` : '/api/1.0/objes?page=';
-    const pendingApiCall = useApiProgress('get', path);
-    useEffect(() => {
-        loadObjes();
-    }, []); // [] mount olduğu anda getiriyor sonra değiştirmiyor.
+    const initialObjeLoadProgress = useApiProgress('get', path);
 
-    const loadObjes = async page => {
-        try {
-            const response = await getObjes(username, page);
-            setObjePage(previousObjePage => ({
-                ...response.data,
-                content: [...previousObjePage.content, ...response.data.content]
-            }));
-        } catch (error) { }
+    let lastObjeId = 0;
+    let firstObjeId = 0;
+    if (objePage.content.length > 0) {
+        firstObjeId = objePage.content[0].id;
+        const lastObjeIndex = objePage.content.length - 1;
+        lastObjeId = objePage.content[lastObjeIndex].id;
+    }
+
+    const oldObjePath = username ? `/api/1.0/users/${username}/objes/${lastObjeId}` : `/api/1.0/objes/${lastObjeId}`;
+    const loadOldObjesProgress = useApiProgress('get', oldObjePath, true);
+
+
+    useEffect(() => {
+        const getCount = async () => {
+            const response = await getNewObjeCount(firstObjeId);
+            setNewObjeCount(response.data.count);
+        };
+        let looper = setInterval(() => {
+            getCount();
+        }, 2000);
+        return function cleanup() {
+            clearInterval(looper);
+        };
+    }, [firstObjeId]);
+
+
+    useEffect(() => {
+        const loadObjes = async page => {
+            try {
+                const response = await getObjes(username, page);
+                setObjePage(previousObjePage => ({
+                    ...response.data,
+                    content: [...previousObjePage.content, ...response.data.content]
+                }));
+            } catch (error) { }
+        };
+        loadObjes();
+    }, [username]);
+
+    const loadOldObjes = async () => {
+        const response = await getOldObjes(lastObjeId, username);
+        setObjePage(previousObjePage => ({
+            ...response.data,
+            content: [...previousObjePage.content, ...response.data.content]
+        }));
     };
 
-    const { content, last, number } = objePage;
+    const { content, last } = objePage;
 
     if (content.length === 0) {
-        return <div className="alert alert-secondary text-center">{pendingApiCall ? <Spinner /> : ('There are no content')}</div>;
+        return <div className="alert alert-secondary text-center">{initialObjeLoadProgress ? <Spinner /> : ('There are no content')}</div>;
     }
 
 
     return <div>
+        {newObjeCount > 0 && <div className="alert alert-secondary text-center"> {('There are new content')}</div>}
         {content.map(obje => {
             return <ObjeView key={obje.id} obje={obje} />
         })}
         {!last && (
             <div
                 className="alert alert-secondary text-center"
-                style={{ cursor: pendingApiCall ? 'not-allowed' : 'pointer' }}
-                onClick={pendingApiCall ? () => { } : () => loadObjes(number + 1)}>
-                {pendingApiCall ? <Spinner /> : ('Load old content')}
+                style={{ cursor: loadOldObjesProgress ? 'not-allowed' : 'pointer' }}
+                onClick={loadOldObjesProgress ? () => { } : () => loadOldObjes()}>
+                {loadOldObjesProgress ? <Spinner /> : ('Load old content')}
             </div>
         )}
     </div>;

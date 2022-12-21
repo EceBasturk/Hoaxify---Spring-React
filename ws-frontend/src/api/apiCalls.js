@@ -38,3 +38,10 @@ export const getObjes = (username, page = 0) => {
     return axios.get(path + page);
 }
 
+export const getOldObjes = (id, username) => {
+    return axios.get(username ? `/api/1.0/users/${username}/objes/${id}` : `/api/1.0/objes/${id}`);
+};
+
+export const getNewObjeCount = id => {
+    return axios.get(`/api/1.0/objes/${id}?count=true`);
+};

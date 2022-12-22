@@ -61,4 +61,9 @@ public class ObjeService {
     public List<Obje> getNewObjes(long id, Sort sort) {
         return objeRepository.findByIdGreaterThan(id, sort);
     }
+
+    public List<Obje> getNewObjesOfUser(long id, String username, Sort sort) {
+        User inDB = userService.getByUsername(username);
+        return objeRepository.findByIdGreaterThanAndUser(id,inDB,sort);
+    }
 }

@@ -58,12 +58,17 @@ public class ObjeController {
     }
 
     @GetMapping("/users/{username}/objes/{id:[0-9]+}")
-    ResponseEntity<?> getUserObjesRelative(@PathVariable long id, @PathVariable String username, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,@RequestParam(name="count", required = false, defaultValue = "false") boolean count){
+    ResponseEntity<?> getUserObjesRelative(@PathVariable long id, @PathVariable String username, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,@RequestParam(name="count", required = false, defaultValue = "false") boolean count,@RequestParam(name="direction", defaultValue = "before") String direction){
         if(count){
             long newObjeCount = objeService.getNewObjesCountOfUser(id,username);
             Map<String,Long> response = new HashMap<>();
             response.put("count",newObjeCount); //clientta  böyle gözekecek
             return ResponseEntity.ok(response);
+        }
+        if(direction.equals("after")){
+            List<ObjeVM> newObjes = objeService.getNewObjesOfUser(id, username, page.getSort())
+                    .stream().map(ObjeVM::new).collect(Collectors.toList()); //akıştaki verileri mapleyip objeVM dönüştürüyorsun ve topladığın bi verileri listeye çeviriyorsun
+            return ResponseEntity.ok(newObjes);
         }
         return ResponseEntity.ok(objeService.getOldObjesOfUser(id, username, page).map(ObjeVM::new));
 

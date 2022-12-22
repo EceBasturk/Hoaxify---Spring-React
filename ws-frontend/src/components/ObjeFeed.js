@@ -22,14 +22,16 @@ const ObjeFeed = () => {
 
     const oldObjePath = username ? `/api/1.0/users/${username}/objes/${lastObjeId}` : `/api/1.0/objes/${lastObjeId}`;
     const loadOldObjesProgress = useApiProgress('get', oldObjePath, true);
-    const loadNewObjesProgress = useApiProgress('get', `/api/1.0/objes/${firstObjeId}?direction=after`, true);
+
+    const NewObjePath = username ? `/api/1.0/users/${username}/objes/${firstObjeId}?direction=after` : `/api/1.0/objes/${firstObjeId}?direction=after`
+    const loadNewObjesProgress = useApiProgress('get', NewObjePath, true);
 
     useEffect(() => {
         const getCount = async () => {
             const response = await getNewObjeCount(firstObjeId, username);
             setNewObjeCount(response.data.count);
         };
-        let looper = setInterval(getCount, 1000);
+        let looper = setInterval(getCount, 5000);
         return function cleanup() {
             clearInterval(looper);
         };
@@ -58,7 +60,7 @@ const ObjeFeed = () => {
     };
 
     const loadNewObjes = async () => {
-        const response = await getNewObjes(firstObjeId);
+        const response = await getNewObjes(firstObjeId, username);
         setObjePage(previousObjePage => ({
             ...previousObjePage,
             content: [...response.data, ...previousObjePage.content]
@@ -78,8 +80,8 @@ const ObjeFeed = () => {
             <div
                 className="alert alert-secondary text-center"
                 style={{ cursor: loadNewObjesProgress ? 'not-allowed' : 'pointer' }}
-                onClick={loadOldObjesProgress ? () => { } : () => loadNewObjes()}>
-                {loadOldObjesProgress ? <Spinner /> : ('There are new content')}
+                onClick={loadNewObjesProgress ? () => { } : () => loadNewObjes()}>
+                {loadNewObjesProgress ? <Spinner /> : ('There are new content')}
             </div>)}
         {content.map(obje => {
             return <ObjeView key={obje.id} obje={obje} />

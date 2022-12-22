@@ -19,4 +19,6 @@ public interface ObjeRepository extends JpaRepository<Obje, Long> {
     long countByIdGreaterThanAndUser(long id, User user);
 
     List<Obje> findByIdGreaterThan(long id, Sort sort);
+
+    List<Obje> findByIdGreaterThanAndUser(long id, User user, Sort sort);
 }

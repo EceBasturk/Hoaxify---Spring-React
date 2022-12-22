@@ -15,7 +15,7 @@ const HomePage = () => {
             )}
                 <ObjeFeed />
             </div>
-            <div className="col "></div>
+            <div className="col-2 "></div>
             <div className="col-4 ">
                 <UserList />
             </div>

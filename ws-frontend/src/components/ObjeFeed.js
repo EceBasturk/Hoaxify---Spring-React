@@ -80,7 +80,7 @@ const ObjeFeed = () => {
             <div
                 className="alert alert-secondary text-center"
                 style={{ cursor: loadNewObjesProgress ? 'not-allowed' : 'pointer' }}
-                onClick={loadNewObjesProgress ? () => { } : () => loadNewObjes()}>
+                onClick={loadNewObjesProgress ? () => { } : loadNewObjes}>
                 {loadNewObjesProgress ? <Spinner /> : ('There are new content')}
             </div>)}
         {content.map(obje => {

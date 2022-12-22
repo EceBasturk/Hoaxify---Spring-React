@@ -4,9 +4,12 @@ import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.DoubleStream;
 
 @Service
@@ -53,5 +56,9 @@ public class ObjeService {
     public long getNewObjesCountOfUser(long id, String username) {
         User inDB = userService.getByUsername(username);
         return objeRepository.countByIdGreaterThanAndUser(id,inDB);
+    }
+
+    public List<Obje> getNewObjes(long id, Sort sort) {
+        return objeRepository.findByIdGreaterThan(id, sort);
     }
 }

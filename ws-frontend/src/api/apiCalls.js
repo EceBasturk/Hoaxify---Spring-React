@@ -46,3 +46,7 @@ export const getNewObjeCount = (id, username) => {
     const path = username ? `/api/1.0/users/${username}/objes/${id}?count=true` : `/api/1.0/objes/${id}?count=true`
     return axios.get(path);
 };
+
+export const getNewObjes = id => {
+    return axios.get(`/api/1.0/objes/${id}?direction=after`);
+};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getObjes, getOldObjes, getNewObjeCount } from '../api/apiCalls'
+import { getObjes, getOldObjes, getNewObjeCount, getNewObjes } from '../api/apiCalls'
 import ObjeView from './ObjeView'
 import { useApiProgress } from '../shared/ApiProgress';
 import Spinner from './Spinner';
@@ -22,16 +22,14 @@ const ObjeFeed = () => {
 
     const oldObjePath = username ? `/api/1.0/users/${username}/objes/${lastObjeId}` : `/api/1.0/objes/${lastObjeId}`;
     const loadOldObjesProgress = useApiProgress('get', oldObjePath, true);
-
+    const loadNewObjesProgress = useApiProgress('get', `/api/1.0/objes/${firstObjeId}?direction=after`, true);
 
     useEffect(() => {
         const getCount = async () => {
             const response = await getNewObjeCount(firstObjeId, username);
             setNewObjeCount(response.data.count);
         };
-        let looper = setInterval(() => {
-            getCount();
-        }, 2000);
+        let looper = setInterval(getCount, 1000);
         return function cleanup() {
             clearInterval(looper);
         };
@@ -59,6 +57,15 @@ const ObjeFeed = () => {
         }));
     };
 
+    const loadNewObjes = async () => {
+        const response = await getNewObjes(firstObjeId);
+        setObjePage(previousObjePage => ({
+            ...previousObjePage,
+            content: [...response.data, ...previousObjePage.content]
+        }));
+        setNewObjeCount(0);
+    };
+
     const { content, last } = objePage;
 
     if (content.length === 0) {
@@ -67,7 +74,13 @@ const ObjeFeed = () => {
 
 
     return <div>
-        {newObjeCount > 0 && <div className="alert alert-secondary text-center"> {('There are new content')}</div>}
+        {newObjeCount > 0 && (
+            <div
+                className="alert alert-secondary text-center"
+                style={{ cursor: loadNewObjesProgress ? 'not-allowed' : 'pointer' }}
+                onClick={loadOldObjesProgress ? () => { } : () => loadNewObjes()}>
+                {loadOldObjesProgress ? <Spinner /> : ('There are new content')}
+            </div>)}
         {content.map(obje => {
             return <ObjeView key={obje.id} obje={obje} />
         })}

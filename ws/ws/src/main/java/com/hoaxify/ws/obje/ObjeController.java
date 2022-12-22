@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/1.0")
@@ -40,12 +42,17 @@ public class ObjeController {
     }
 
     @GetMapping("/objes/{id:[0-9]+}")
-    ResponseEntity<?> getObjesRelative(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page, @PathVariable long id, @RequestParam(name="count", required = false, defaultValue = "false") boolean count){
+    ResponseEntity<?> getObjesRelative(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page, @PathVariable long id, @RequestParam(name="count", required = false, defaultValue = "false") boolean count,@RequestParam(name="direction", defaultValue = "before") String direction){
         if(count){
             long newObjeCount = objeService.getNewObjesCount(id);
             Map<String,Long> response = new HashMap<>();
             response.put("count",newObjeCount); //clientta  böyle gözekecek
             return ResponseEntity.ok(response);
+        }
+        if(direction.equals("after")){
+            List<ObjeVM> newObjes = objeService.getNewObjes(id, page.getSort()) //yeniden eskiye istediğimiz için
+                    .stream().map(ObjeVM::new).collect(Collectors.toList()); //akıştaki verileri mapleyip objeVM dönüştürüyorsun ve topladığın bi verileri listeye çeviriyorsun
+            return ResponseEntity.ok(newObjes);
         }
         return ResponseEntity.ok(objeService.getOldObjes(id, page).map(ObjeVM::new));
     }

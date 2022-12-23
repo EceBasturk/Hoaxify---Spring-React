@@ -1,5 +1,6 @@
 package com.hoaxify.ws.obje;
 
+import com.hoaxify.ws.file.FileAttachment;
 import com.hoaxify.ws.user.User;
 import lombok.Data;
 import lombok.Generated;
@@ -26,6 +27,9 @@ public class Obje {
 
     @ManyToOne
     private User user;
+
+    @OneToOne(mappedBy = "obje")
+    private FileAttachment fileAttachment;
 
     private String tag;
 }

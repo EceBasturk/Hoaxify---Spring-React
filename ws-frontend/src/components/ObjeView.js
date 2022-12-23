@@ -5,7 +5,7 @@ import { format } from 'timeago.js';
 
 const ObjeView = props => {
     const { obje } = props;
-    const { user, content, timestamp } = obje;
+    const { user, content, timestamp, fileAttachment } = obje;
     const { username, displayName, image } = user;
 
     const formatted = format(timestamp);
@@ -25,6 +25,11 @@ const ObjeView = props => {
                 </div>
             </div>
             <div className="ms-5">{content}</div>
+            {fileAttachment && (
+                <div className="pl-5">
+                    <img className="img-fluid" src={'images/' + fileAttachment.name} alt={content} />
+                </div>
+            )}
         </div>
     );
 }

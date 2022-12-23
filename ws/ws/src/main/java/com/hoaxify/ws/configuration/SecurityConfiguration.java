@@ -21,13 +21,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        http.httpBasic().authenticationEntryPoint(new AuthEntryPoint());
+        //authentication failed durumlarında clienta dönecek durumlar için bunu olusturduk
+        http.exceptionHandling().authenticationEntryPoint(new AuthEntryPoint());
 
         http.headers().frameOptions().disable();
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/1.0/auth").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/1.0/users/{username}").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/1.0/objes").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/1.0/obje-attachments").authenticated()

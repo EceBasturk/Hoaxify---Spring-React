@@ -68,6 +68,13 @@ const ObjeFeed = () => {
         setNewObjeCount(0);
     };
 
+    const onDeleteObjeSuccess = id => {
+        setObjePage(previousObjePage => ({
+            ...previousObjePage,
+            content: previousObjePage.content.filter(obje => obje.id !== id)
+        }));
+    };
+
     const { content, last } = objePage;
 
     if (content.length === 0) {
@@ -84,7 +91,7 @@ const ObjeFeed = () => {
                 {loadNewObjesProgress ? <Spinner /> : ('There are new content')}
             </div>)}
         {content.map(obje => {
-            return <ObjeView key={obje.id} obje={obje} />
+            return <ObjeView key={obje.id} obje={obje} onDeleteObje={onDeleteObjeSuccess} />
         })}
         {!last && (
             <div

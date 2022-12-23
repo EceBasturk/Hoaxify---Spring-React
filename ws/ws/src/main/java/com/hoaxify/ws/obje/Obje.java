@@ -28,7 +28,7 @@ public class Obje {
     @ManyToOne
     private User user;
 
-    @OneToOne(mappedBy = "obje")
+    @OneToOne(mappedBy = "obje", cascade = CascadeType.REMOVE)
     private FileAttachment fileAttachment;
 
     private String tag;

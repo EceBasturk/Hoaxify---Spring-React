@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -61,6 +62,13 @@ public class ObjeController {
             return ResponseEntity.ok(newObjes);
         }
         return ResponseEntity.ok(objeService.getOldObjes(id, username, page).map(ObjeVM::new));
+    }
+
+    @DeleteMapping("/objes/{id:[0-9]+}")
+    @PreAuthorize("@objeSecurity.isAllowedToDelete(#id, principal)")
+    GenericResponse deleteObje(@PathVariable long id) {
+        objeService.delete(id);
+        return new GenericResponse("Obje removed");
     }
 
 //    @GetMapping("/users/{username}/objes/{id:[0-9]+}")

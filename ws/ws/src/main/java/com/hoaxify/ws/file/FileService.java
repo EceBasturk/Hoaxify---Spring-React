@@ -94,7 +94,6 @@ public class FileService {
         for(FileAttachment file : filesToBeDeleted) {
             System.out.println("removing file: " + file.getName());
             deleteFile(file.getName());
-
             fileAttachmentRepository.deleteById(file.getId());
         }
 

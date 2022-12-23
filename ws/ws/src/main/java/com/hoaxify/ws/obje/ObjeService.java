@@ -2,6 +2,7 @@ package com.hoaxify.ws.obje;
 
 import com.hoaxify.ws.file.FileAttachment;
 import com.hoaxify.ws.file.FileAttachmentRepository;
+import com.hoaxify.ws.file.FileService;
 import com.hoaxify.ws.obje.vm.ObjeSubmitVM;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
@@ -97,6 +98,10 @@ public class ObjeService {
         return (root, query, criteriaBuilder) -> {
             return criteriaBuilder.greaterThan(root.get("id"), id);
         };
+    }
+
+    public void delete(long id) {
+        objeRepository.deleteById(id);
     }
 
 

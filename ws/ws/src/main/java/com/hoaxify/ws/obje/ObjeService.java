@@ -6,6 +6,7 @@ import com.hoaxify.ws.file.FileService;
 import com.hoaxify.ws.obje.vm.ObjeSubmitVM;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,11 +27,15 @@ public class ObjeService {
 
     FileAttachmentRepository fileAttachmentRepository;
 
-    public ObjeService(ObjeRepository objeRepository, UserService userService, FileAttachmentRepository fileAttachmentRepository) {
+    public ObjeService(ObjeRepository objeRepository, FileAttachmentRepository fileAttachmentRepository) {
         super();
         this.objeRepository = objeRepository;
-        this.userService = userService;
         this.fileAttachmentRepository = fileAttachmentRepository;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     public void save(ObjeSubmitVM objeSubmitVM, User user) {
@@ -105,5 +110,11 @@ public class ObjeService {
     }
 
 
+    public void deleteObjesOfUser(String username) {
+        User inDB = userService.getByUsername(username);
+        Specification<Obje> userOwned = userIs(inDB);
+        List<Obje> objesToBeRemoved = objeRepository.findAll(userOwned);
+        objeRepository.deleteAll(objesToBeRemoved);
+    }
 }
 

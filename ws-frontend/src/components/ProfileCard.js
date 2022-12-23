@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import ProfileImageWithDefault from './ProfileImageWithDefault';
 import Input from './input';
-import { updateUser } from '../api/apiCalls';
+import { updateUser, deleteUser } from '../api/apiCalls';
 import { useApiProgress } from '../shared/ApiProgress';
 import ButtonWithProgress from './ButtonWithProgress';
-import { updateSuccess } from '../redux/authActions';
+import { updateSuccess, logoutSuccess } from '../redux/authActions';
+import Modal from './Modal';
 
 const ProfileCard = props => {
     const { username: loggedInUsername } = useSelector(store => ({ username: store.username }));
@@ -16,6 +17,8 @@ const ProfileCard = props => {
     const [editable, setEditable] = useState(false);
     const [newImage, setNewImage] = useState();
     const [validationErrors, setValidationErrors] = useState({});
+    const [modalVisible, setModalVisible] = useState(false);
+    const history = useHistory();
 
     const dispatch = useDispatch();
 
@@ -66,6 +69,17 @@ const ProfileCard = props => {
         fileReader.readAsDataURL(file);
     }
 
+    const onClickCancel = () => {
+        setModalVisible(false);
+    };
+
+    const onClickDeleteUser = async () => {
+        await deleteUser(username);
+        setModalVisible(false);
+        dispatch(logoutSuccess());
+        history.push('/');
+    };
+
     //setValidationErrors hookunda previousValidationErrors parametresi ile bir fonks yazıldı ve tek satırlık bir fonksiyon olup direkt olarak render edilebileceği için ({}) gibi () içine alınarak yazıldı. return  buna dönüştü ()
     useEffect(() => {
         setValidationErrors(previousValidationErrors => ({
@@ -82,6 +96,7 @@ const ProfileCard = props => {
     }, [newImage]);
 
     const pendingApiCall = useApiProgress('put', '/api/1.0/users/' + username);
+    const pendingApiCallDeleteUser = useApiProgress('delete', `/api/1.0/users/${username}`, true);
 
     const { displayName: displayNameError, image: imageError } = validationErrors;
 
@@ -109,10 +124,18 @@ const ProfileCard = props => {
                             {displayName} @{username}
                         </h3>
                         {editable && (
-                            <button className="btn btn-success d-inline-flex" onClick={() => setInEditMode(true)}>
-                                <i className="material-icons">edit</i>
-                                {('Edit')}
-                            </button>
+                            <>
+                                <button className="btn btn-success d-inline-flex" onClick={() => setInEditMode(true)}>
+                                    <i className="material-icons me">edit</i>
+                                    {('Edit')}
+                                </button>
+                                <div className="mt-2">
+                                    <button className="btn btn-danger d-inline-flex" onClick={() => setModalVisible(true)}>
+                                        <i className="material-icons me-1">person_remove</i>
+                                        {('Delete My Account')}
+                                    </button>
+                                </div>
+                            </>
                         )}
                     </>
                 )}
@@ -149,6 +172,15 @@ const ProfileCard = props => {
                 )}
 
             </div>
+            <Modal
+                visible={modalVisible}
+                title={('Delete My Account')}
+                okButton={('Delete My Account')}
+                onClickCancel={onClickCancel}
+                onClickOk={onClickDeleteUser}
+                message={('Are you sure to delete your account?')}
+                pendingApiCall={pendingApiCallDeleteUser}
+            />
         </div>
     );
 };

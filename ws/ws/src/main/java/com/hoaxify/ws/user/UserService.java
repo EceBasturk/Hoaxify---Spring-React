@@ -2,7 +2,9 @@ package com.hoaxify.ws.user;
 
 import com.hoaxify.ws.error.NotFoundException;
 import com.hoaxify.ws.file.FileService;
+import com.hoaxify.ws.obje.ObjeService;
 import com.hoaxify.ws.user.vm.UserUpdateVM;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,10 +21,19 @@ public class UserService {
 
     FileService fileService;
 
+    ObjeService objeService;
+
+    //constructor injection
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FileService fileService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.fileService = fileService;
+    }
+
+    //setter injection
+    @Autowired
+    public void setObjeService(ObjeService objeService){
+        this.objeService = objeService;
     }
 
     public void save(User user){
@@ -60,4 +71,8 @@ public class UserService {
         return userRepository.save(inDB);
     }
 
+    public void deleteUser(String username) {
+        objeService.deleteObjesOfUser(username);;
+        userRepository.deleteByUsername(username);
+    }
 }

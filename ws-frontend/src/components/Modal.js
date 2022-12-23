@@ -2,7 +2,7 @@ import React from 'react';
 import ButtonWithProgress from './ButtonWithProgress';
 
 const Modal = props => {
-    const { visible, onClickCancel, message, onClickOk, pendingApiCall } = props;
+    const { visible, onClickCancel, message, onClickOk, pendingApiCall, title, okButton } = props;
 
     let className = 'modal fade';
     if (visible) {
@@ -14,7 +14,7 @@ const Modal = props => {
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">{('Delete Content')}</h5>
+                        <h5 className="modal-title">{title}</h5>
                     </div>
                     <div className="modal-body">{message}</div>
                     <div className="modal-footer">
@@ -26,7 +26,7 @@ const Modal = props => {
                             onClick={onClickOk}
                             pendingApiCall={pendingApiCall}
                             disabled={pendingApiCall}
-                            text={('Delete Content')}
+                            text={okButton}
                         />
                     </div>
                 </div>

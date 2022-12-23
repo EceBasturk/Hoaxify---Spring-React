@@ -58,8 +58,9 @@ const ObjeView = props => {
                         </div>
                     )}
                 </div>
-                <Modal
+                <Modal //JSX formatı
                     visible={modalVisible}
+                    title={('Delete Content')}
                     onClickCancel={onClickCancel}
                     onClickOk={onClickDelete}
                     message={
@@ -71,6 +72,7 @@ const ObjeView = props => {
                         </div>
                     }
                     pendingApiCall={pendingApiCall}
+                    okButton={('Delete Content')}
                 />
             </div>
         </>

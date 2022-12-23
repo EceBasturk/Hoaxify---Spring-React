@@ -19,6 +19,7 @@ const ObjeSubmit = () => {
             setObje('')
             setErrors({});
             setNewImage();
+            setAttachmentId();
         }
     }, [focused]);
 

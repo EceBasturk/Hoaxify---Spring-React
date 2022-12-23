@@ -31,7 +31,7 @@ const ObjeFeed = () => {
             const response = await getNewObjeCount(firstObjeId, username);
             setNewObjeCount(response.data.count);
         };
-        let looper = setInterval(getCount, 5000);
+        let looper = setInterval(getCount, 100000);
         return function cleanup() {
             clearInterval(looper);
         };

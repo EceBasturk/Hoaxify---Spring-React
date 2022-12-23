@@ -1,5 +1,6 @@
 package com.hoaxify.ws.obje;
 
+import com.hoaxify.ws.obje.vm.ObjeSubmitVM;
 import com.hoaxify.ws.obje.vm.ObjeVM;
 import com.hoaxify.ws.shared.CurrentUser;
 import com.hoaxify.ws.shared.GenericResponse;
@@ -25,7 +26,7 @@ public class ObjeController {
     ObjeService objeService;
 
     @PostMapping("/objes")
-    GenericResponse saveObje(@Valid @RequestBody Obje obje, @CurrentUser User user) {
+    GenericResponse saveObje(@Valid @RequestBody ObjeSubmitVM obje, @CurrentUser User user) {
         objeService.save(obje, user);
         return new GenericResponse("Obje is saved");
     }

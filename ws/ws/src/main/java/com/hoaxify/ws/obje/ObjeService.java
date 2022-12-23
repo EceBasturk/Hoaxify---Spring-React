@@ -1,5 +1,8 @@
 package com.hoaxify.ws.obje;
 
+import com.hoaxify.ws.file.FileAttachment;
+import com.hoaxify.ws.file.FileAttachmentRepository;
+import com.hoaxify.ws.obje.vm.ObjeSubmitVM;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
 import org.springframework.data.domain.Page;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.DoubleStream;
 
 @Service
@@ -19,16 +23,27 @@ public class ObjeService {
     ObjeRepository objeRepository;
     UserService userService;
 
-    public ObjeService(ObjeRepository objeRepository, UserService userService) {
+    FileAttachmentRepository fileAttachmentRepository;
+
+    public ObjeService(ObjeRepository objeRepository, UserService userService, FileAttachmentRepository fileAttachmentRepository) {
         super();
         this.objeRepository = objeRepository;
         this.userService = userService;
+        this.fileAttachmentRepository = fileAttachmentRepository;
     }
 
-    public void save(Obje obje, User user) {
+    public void save(ObjeSubmitVM objeSubmitVM, User user) {
+        Obje obje = new Obje();
+        obje.setContent(objeSubmitVM.getContent());
         obje.setTimestamp(new Date());
         obje.setUser(user);
         objeRepository.save(obje);
+        Optional<FileAttachment> optionalFileAttachment = fileAttachmentRepository.findById(objeSubmitVM.getAttachmentId());
+        if (optionalFileAttachment.isPresent()) {
+            FileAttachment fileAttachment = optionalFileAttachment.get();
+            fileAttachment.setObje(obje);
+            fileAttachmentRepository.save(fileAttachment);
+        }
     }
     public Page<Obje> getObjes(Pageable page) {
         return objeRepository.findAll(page);

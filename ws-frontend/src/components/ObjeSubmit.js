@@ -12,6 +12,7 @@ const ObjeSubmit = () => {
     const [obje, setObje] = useState('');
     const [errors, setErrors] = useState({});
     const [newImage, setNewImage] = useState();
+    const [attachmentId, setAttachmentId] = useState();
 
     useEffect(() => {
         if (!focused) {
@@ -25,11 +26,12 @@ const ObjeSubmit = () => {
         setErrors({});
     }, [obje]);
 
-    const pendingApiCall = useApiProgress('post', '/api/1.0/objes');
+    const pendingApiCall = useApiProgress('post', '/api/1.0/objes', true);
 
     const onClickFly = async () => {
         const body = {
-            content: obje
+            content: obje,
+            attachmentId: attachmentId
         };
 
         try {
@@ -58,7 +60,8 @@ const ObjeSubmit = () => {
     const uploadFile = async file => {
         const attachment = new FormData();
         attachment.append('file', file);
-        await postObjeAttachment(attachment);
+        const response = await postObjeAttachment(attachment);
+        setAttachmentId(response.data.id);
     };
 
 

@@ -17,7 +17,6 @@ public class Obje {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Size(min=1, max=1000)
     @Column(length = 1000)
     //Column değeri db de varchar 255 default değerini 1000 ile değiştirdi.
     private String content;

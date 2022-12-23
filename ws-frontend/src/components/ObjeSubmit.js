@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ProfileImageWithDefault from './ProfileImageWithDefault';
-import { postObje } from '../api/apiCalls'
+import { postObje, postObjeAttachment } from '../api/apiCalls'
 import { useApiProgress } from '../shared/ApiProgress';
 import ButtonWithProgress from './ButtonWithProgress';
 import Input from './input';
@@ -50,9 +50,17 @@ const ObjeSubmit = () => {
         const fileReader = new FileReader();
         fileReader.onloadend = () => {
             setNewImage(fileReader.result);
+            uploadFile(file);
         };
         fileReader.readAsDataURL(file);
     };
+
+    const uploadFile = async file => {
+        const attachment = new FormData();
+        attachment.append('file', file);
+        await postObjeAttachment(attachment);
+    };
+
 
     let textAreaClass = 'form-control';
     if (errors.content) {

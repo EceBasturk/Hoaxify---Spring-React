@@ -5,21 +5,31 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.apache.tika.Tika;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileService {
-    Tika tika = new Tika();
+    Tika tika;
+
+    FileAttachmentRepository fileAttachmentRepository;
+
+    public FileService(FileAttachmentRepository fileAttachmentRepository) {
+        this.tika = new Tika();
+        this.fileAttachmentRepository = fileAttachmentRepository;
+    }
+
     public String writeBase64EncodedStringToFile(String image) throws IOException {
 
 
         String fileName = generateRandomName();
-        File target = new File("D:/hoaxify/ws/ws/picture-storage/"+fileName);
+        File target = new File("D:/hoaxify/ws/ws/profile-picture-storage/"+fileName);
         OutputStream outputStream = new FileOutputStream(target);
 
         byte[] base64enoded = Base64.getDecoder().decode(image);
@@ -41,4 +51,20 @@ public class FileService {
         return tika.detect(base64encoded);
     }
 
+    public FileAttachment saveObjeAttachment(MultipartFile multipartFile) {
+        String fileName = generateRandomName();
+        File target = new File("D:/hoaxify/ws/ws/picture-storage/"+fileName);
+        try {
+            OutputStream outputStream = new FileOutputStream(target);
+            outputStream.write(multipartFile.getBytes());
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileAttachment attachment = new FileAttachment();
+        attachment.setName(fileName);
+        attachment.setDate(new Date());
+        return fileAttachmentRepository.save(attachment);
+    }
 }

@@ -7,10 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class FileController {
+
     @Autowired
     FileService fileService;
-    @PostMapping("api/1.0/obje-attachments")
-    void saveObjeAttachment(MultipartFile multipartFile){
 
+    @PostMapping("/api/1.0/obje-attachments")
+    FileAttachment saveObjeAttachment(MultipartFile file) {
+        return fileService.saveObjeAttachment(file);
     }
+
 }

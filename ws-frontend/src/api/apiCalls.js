@@ -51,3 +51,7 @@ export const getNewObjes = (id, username) => {
     const path = username ? `/api/1.0/users/${username}/objes/${id}?direction=after` : `/api/1.0/objes/${id}?direction=after`;
     return axios.get(path);
 };
+
+export const postObjeAttachment = attachment => {
+    return axios.post('/api/1.0/obje-attachments', attachment);
+};

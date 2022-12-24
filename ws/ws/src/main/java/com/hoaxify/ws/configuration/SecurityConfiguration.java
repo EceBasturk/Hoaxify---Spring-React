@@ -11,6 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled=true)
 //Bir kullanıcnın bir işlem yaparken buna yetkisi var mı diye kontrol ediyor (PreAuthorize i aktive ediyor)
@@ -37,6 +39,8 @@ public class SecurityConfiguration {
         //Cookie'yi yönetmek için
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -48,4 +52,7 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    TokenFilter tokenFilter() { return new TokenFilter();}
 }
